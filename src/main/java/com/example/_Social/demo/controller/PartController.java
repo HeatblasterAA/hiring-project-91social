@@ -1,8 +1,12 @@
 package com.example._Social.demo.controller;
 
+import com.example._Social.demo.DTO.CreatePartRequest;
+import com.example._Social.demo.DTO.PartResponse;
 import com.example._Social.demo.entity.Part;
 import com.example._Social.demo.service.PartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +19,16 @@ public class PartController {
     private final PartService partService;
 
     @PostMapping
-    public Part createPart(@RequestBody Part part){
-        return partService.createPart(part);
+    public ResponseEntity<PartResponse> createPart( @Valid @RequestBody CreatePartRequest request ) {
+        return ResponseEntity.ok(
+                partService.createPart(request)
+        );
     }
 
     @GetMapping
-    public List<Part> getAllParts(){
-        return partService.getAllParts();
+    public ResponseEntity<List<PartResponse>> getAllParts() {
+        return ResponseEntity.ok(
+                partService.getAllParts()
+        );
     }
 }
