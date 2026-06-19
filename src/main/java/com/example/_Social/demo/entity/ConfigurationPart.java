@@ -26,5 +26,5 @@ public class ConfigurationPart {
     private Part part;
 
     @Column(nullable = false)
-    private Integer integer;
+    private Integer quantity;
 }
