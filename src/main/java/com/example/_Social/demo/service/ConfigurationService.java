@@ -6,11 +6,14 @@ import com.example._Social.demo.DTO.CreateConfigurationRequest;
 import com.example._Social.demo.entity.ConfigurationPart;
 import com.example._Social.demo.entity.CycleConfiguration;
 import com.example._Social.demo.entity.Part;
+import com.example._Social.demo.exception.ResourceNotFoundException;
 import com.example._Social.demo.repository.ConfigurationPartRepository;
 import com.example._Social.demo.repository.CycleConfigurationRepository;
 import com.example._Social.demo.repository.PartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class ConfigurationService {
                                     partRequest.getPartId()
                             )
                             .orElseThrow(() ->
-                                    new RuntimeException(
+                                    new ResourceNotFoundException(
                                             "Part not found"
                                     ));
 
@@ -52,6 +55,34 @@ public class ConfigurationService {
                     configurationPart
             );
         }
+
+        return ConfigurationResponse.builder()
+                .id(configuration.getId())
+                .name(configuration.getName())
+                .build();
+    }
+    public List<ConfigurationResponse> getAllConfigurations() {
+
+        return cycleConfigurationRepository.findAll()
+                .stream()
+                .map(config ->
+                        ConfigurationResponse.builder()
+                                .id(config.getId())
+                                .name(config.getName())
+                                .build()
+                )
+                .toList();
+    }
+    public ConfigurationResponse getConfigurationById(
+            Long id
+    ) {
+
+        CycleConfiguration configuration =
+                cycleConfigurationRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Configuration not found"
+                                ));
 
         return ConfigurationResponse.builder()
                 .id(configuration.getId())

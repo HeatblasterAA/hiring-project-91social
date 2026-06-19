@@ -6,10 +6,9 @@ import com.example._Social.demo.service.ConfigurationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/configurations")
@@ -28,6 +27,27 @@ public class ConfigurationController {
         return ResponseEntity.ok(
                 configurationService
                         .createConfiguration(request)
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ConfigurationResponse>>
+    getAllConfigurations() {
+
+        return ResponseEntity.ok(
+                configurationService
+                        .getAllConfigurations()
+        );
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ConfigurationResponse>
+    getConfigurationById(
+            @PathVariable Long id
+    ) {
+
+        return ResponseEntity.ok(
+                configurationService
+                        .getConfigurationById(id)
         );
     }
 }

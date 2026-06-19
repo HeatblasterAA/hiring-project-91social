@@ -5,6 +5,7 @@ import com.example._Social.demo.DTO.CreatePartRequest;
 import com.example._Social.demo.DTO.PartResponse;
 import com.example._Social.demo.entity.Part;
 import com.example._Social.demo.entity.PartPriceHistory;
+import com.example._Social.demo.exception.ResourceNotFoundException;
 import com.example._Social.demo.repository.PartPriceHistoryRepository;
 import com.example._Social.demo.repository.PartRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class PartService {
 
     public  void addPrice(Long partId, CreatePartPriceRequest request){
 
-        Part part = partRepository.findById(partId).orElseThrow(()->new RuntimeException("Part not found"));
+        Part part = partRepository.findById(partId).orElseThrow(()->new ResourceNotFoundException("Part not found"));
 
         PartPriceHistory history = PartPriceHistory.builder()
                 .part(part)
