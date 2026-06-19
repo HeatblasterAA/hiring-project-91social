@@ -1,5 +1,6 @@
 package com.example._Social.demo.controller;
 
+import com.example._Social.demo.DTO.CreatePartPriceRequest;
 import com.example._Social.demo.DTO.CreatePartRequest;
 import com.example._Social.demo.DTO.PartResponse;
 import com.example._Social.demo.entity.Part;
@@ -30,5 +31,11 @@ public class PartController {
         return ResponseEntity.ok(
                 partService.getAllParts()
         );
+    }
+
+    @PostMapping("/{partId}/prices")
+    public ResponseEntity<Void> addPrice(@PathVariable Long partId, @Valid @RequestBody CreatePartPriceRequest request){
+        partService.addPrice(partId,request);
+        return ResponseEntity.ok().build();
     }
 }
