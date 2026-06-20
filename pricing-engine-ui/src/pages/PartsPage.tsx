@@ -2,11 +2,43 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import { Part } from "../types/Part";
 
+
 function PartsPage() {
   const [parts, setParts] = useState<Part[]>([]);
   const [name, setName] = useState("");
 const [category, setCategory] = useState("FRAME");
-const [description, setDescription] = useState("")
+const [description, setDescription] = useState("");
+const [price, setPrice] = useState("");
+const [effectiveFrom, setEffectiveFrom] = useState("");
+const [selectedPartId,
+  setSelectedPartId] =
+  useState<number>(0);
+
+const addPrice = async (
+  partId: number
+) => {
+
+  try {
+
+    await api.post(
+      `/parts/${partId}/prices`,
+      {
+        price:
+          Number(price),
+        effectiveFrom,
+      }
+    );
+
+    alert(
+      "Price Added"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+};
 
   useEffect(() => {
     fetchParts();
@@ -41,13 +73,70 @@ const createPart = async () => {
     <div>
       <h1>Parts Management</h1>
 
-      <ul>
-        {parts.map((part) => (
-          <li key={part.id}>
-            {part.name} - {part.category}
-          </li>
-        ))}
-      </ul>
+      
+
+    {/* <ul>
+        
+  {parts.map((part) => (
+    <li key={part.id}>
+      {part.name} - {part.category}
+
+      <button
+        onClick={() =>
+          addPrice(part.id)
+        }
+      >
+        Add Price
+      </button>
+    </li>
+  ))}
+</ul> */}
+<select
+  onChange={(e) =>
+    setSelectedPartId(
+      Number(e.target.value)
+    )
+  }
+>
+  <option value="">
+    Select Part
+  </option>
+
+  {parts.map((part) => (
+    <option
+      key={part.id}
+      value={part.id}
+    >
+      {part.name}
+    </option>
+  ))}
+</select>
+<h2>Add Price</h2>
+
+<input
+  type="number"
+  placeholder="Price"
+  value={price}
+  onChange={(e) =>
+    setPrice(e.target.value)
+  }
+/>
+
+<input
+  type="date"
+  value={effectiveFrom}
+  onChange={(e) =>
+    setEffectiveFrom(e.target.value)
+  }
+/>
+
+<button
+  onClick={() =>
+    addPrice(selectedPartId)
+  }
+>
+  Add Price
+</button>
       <h2>Create Part</h2>
 
 <input
@@ -77,6 +166,7 @@ const createPart = async () => {
 <button onClick={createPart}>
   Create Part
 </button>
+
     </div>
   );
 }

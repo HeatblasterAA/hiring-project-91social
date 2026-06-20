@@ -4,7 +4,9 @@ import { Configuration } from "../types/Configuration";
 import { PricingResponse } from "../types/PricingResponse";
 
 function PricingPage() {
-
+const [selectedDate,
+  setSelectedDate] =
+    useState("");
   const [configurations,
     setConfigurations] =
       useState<Configuration[]>([]);
@@ -20,6 +22,32 @@ function PricingPage() {
   useEffect(() => {
     fetchConfigurations();
   }, []);
+
+  const calculateHistoricalPrice =
+  async () => {
+
+    if (
+      !selectedConfiguration ||
+      !selectedDate
+    ) return;
+
+    const response =
+      await api.get<
+        PricingResponse
+      >(
+        `/pricing/configurations/${selectedConfiguration}/historical`,
+        {
+          params: {
+            date:
+              selectedDate
+          }
+        }
+      );
+
+    setPricing(
+      response.data
+    );
+};
 
   const fetchConfigurations =
     async () => {
@@ -86,6 +114,15 @@ function PricingPage() {
           )
         }
       </select>
+      <input
+  type="date"
+  value={selectedDate}
+  onChange={(e) =>
+    setSelectedDate(
+      e.target.value
+    )
+  }
+/>
 
       <button
         onClick={
@@ -94,6 +131,13 @@ function PricingPage() {
       >
         Calculate
       </button>
+      <button
+  onClick={
+    calculateHistoricalPrice
+  }
+>
+  Historical Price
+</button>
 
       {
         pricing && (
@@ -161,6 +205,7 @@ function PricingPage() {
                 pricing.grandTotal
               }
             </h2>
+            
 
           </>
         )
